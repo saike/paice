@@ -301,18 +301,16 @@
 
           }
 
-          var r = Math.floor((is_painting.frequency / Paice.constants.FREQUENCY.MAX) * 255);
-          var g = Math.floor((Math.abs(is_painting.volume) / Paice.constants.VOLUME.MAX) * 255);
-          var b =  Math.floor((Math.abs(is_painting.cents) / Paice.constants.CENTS.MAX) * 255);
-          var alpha = Math.abs(1/(Paice.constants.VOLUME.MAX/is_painting.volume));
+          var color = Math.floor(((sound.frequency / Paice.constants.FREQUENCY.MAX) * Paice.constants.COLORS.MAX)).toString(16);
+          var alpha = Math.abs(1-sound.volume.toFixed(2));
           var width = Math.floor((sound.volume / Paice.constants.VOLUME.MAX) * Paice.constants.SIZE.MAX);
           var height = Math.floor((sound.frequency / Paice.constants.FREQUENCY.MAX) * Paice.constants.SIZE.MAX);
 
           var pixel_data = {
 
-            x: Math.floor((Math.abs(sound.cents) / (Paice.constants.CENTS.MAX)) * Paice.current_canvas.width),
-            y: Math.floor((sound.volume / Paice.constants.VOLUME.MAX) * Paice.current_canvas.height),
-            fill: [ r,g,b,alpha ],
+            x: Paice.current_canvas.width/2 + Math.floor((sound.cents / Paice.constants.CENTS.MAX)*(Paice.current_canvas.width/2)),
+            y: Math.floor((sound.volume / Paice.constants.VOLUME.MAX)*Paice.current_canvas.height),
+            fill: color,
             size: [width,height]
 
           };
@@ -323,7 +321,7 @@
 
           //Paice.current_canvas && pixel.render(Paice.current_canvas);
 
-          Paice.log({ frequency: pitch, cents: ( detune == 0 ? '--' : Math.abs( detune ) ), volume: meter.volume, note: noteStrings[note%12], width: width, height: height });
+          Paice.log({ frequency: pitch, cents: ( detune == 0 ? '--' : detune ), volume: meter.volume, note: noteStrings[note%12], width: width, height: height });
 
         }
 

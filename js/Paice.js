@@ -15,15 +15,15 @@
 
         VOLUME: {
 
-          MIN: 0,
-          MAX: 0.7
+          MIN: 0.1,
+          MAX: 0.4
 
         },
 
         CENTS: {
 
           MIN: 0,
-          MAX: 40
+          MAX: 50
 
         },
 
@@ -40,6 +40,10 @@
             HEIGHT: 720
           }
         ],
+
+        COLORS: {
+          MAX: 16777216
+        },
 
         FPS: 100
 

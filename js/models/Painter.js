@@ -22,8 +22,8 @@
 
         self.ctx = canvas.dom.getContext("2d");
 
-        self.ctx.strokeStyle = "rgba("+pixel.fill[0]+","+pixel.fill[1]+","+pixel.fill[2]+","+pixel.fill[3]+")";
-        self.ctx.fillStyle = "rgba("+pixel.fill[0]+","+pixel.fill[1]+","+pixel.fill[2]+","+pixel.fill[3]+")";
+        self.ctx.strokeStyle = '#' + pixel.fill;
+        self.ctx.fillStyle = '#' + pixel.fill;
         self.ctx.lineWidth = pixel.size[0];
         self.ctx.lineCap = 'round';
         self.ctx.moveTo(pixel.x, pixel.y); // Курсор на начальную позицию
@@ -37,8 +37,8 @@
         console.log('move');
 
         self.ctx.lineWidth = pixel.size[0];
-        self.ctx.strokeStyle = "rgba("+pixel.fill[0]+","+pixel.fill[1]+","+pixel.fill[2]+","+pixel.fill[3]+")";
-        self.ctx.fillStyle = "rgba("+pixel.fill[0]+","+pixel.fill[1]+","+pixel.fill[2]+","+pixel.fill[3]+")";
+        self.ctx.strokeStyle = '#' + pixel.fill;
+        self.ctx.fillStyle = '#' + pixel.fill;
 
         // Текущее положение мыши - начальные координаты
         self.ctx.lineTo(pixel.x, pixel.y);
