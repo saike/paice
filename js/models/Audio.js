@@ -287,11 +287,13 @@
 
           var sound = new Sound();
 
-          sound.frequency = Math.round( pitch );
+          pitch = Math.round( pitch );
 
-          sound.volume = meter.volume;
+          sound.frequency = is_painting && ( Math.abs(is_painting.frequency/pitch) < 0.8 || Math.abs(is_painting.frequency/pitch) > 1.2) ? is_painting.frequency : pitch;
 
-          sound.cents = detune;
+          sound.volume = is_painting && ( Math.abs(is_painting.volume/meter.volume) < 0.8 || Math.abs(is_painting.volume/meter.volume) > 1.2) ? is_painting.volume : meter.volume;
+
+          sound.cents = is_painting && ( Math.abs(is_painting.cents/detune) < 0.8 || Math.abs(is_painting.cents/detune) > 1.2) ? is_painting.cents : detune;
 
           if(!is_painting) {
 
@@ -308,7 +310,7 @@
 
           var pixel_data = {
 
-            x: Math.floor((sound.frequency / Paice.constants.FREQUENCY.MAX) * Paice.current_canvas.width),
+            x: Math.floor((Math.abs(sound.cents) / (Paice.constants.CENTS.MAX)) * Paice.current_canvas.width),
             y: Math.floor((sound.volume / Paice.constants.VOLUME.MAX) * Paice.current_canvas.height),
             fill: [ r,g,b,alpha ],
             size: [width,height]

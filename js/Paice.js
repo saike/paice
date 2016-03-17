@@ -16,14 +16,14 @@
         VOLUME: {
 
           MIN: 0,
-          MAX: 0.5
+          MAX: 0.7
 
         },
 
         CENTS: {
 
           MIN: 0,
-          MAX: 100
+          MAX: 40
 
         },
 
