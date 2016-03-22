@@ -9,14 +9,14 @@
       this.constants = {
 
         FREQUENCY: {
-          MIN: 1,
-          MAX: 6000
+          MIN: 120,
+          MAX: 7000
         },
 
         VOLUME: {
 
-          MIN: 0.1,
-          MAX: 0.4
+          MIN: 0,
+          MAX: 0.7
 
         },
 
@@ -43,6 +43,11 @@
 
         COLORS: {
           MAX: 16777216
+        },
+
+        STEP: {
+          MAX: 10,
+          MIN: 0
         },
 
         FPS: 100

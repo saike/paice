@@ -267,17 +267,24 @@
 
       var is_painting = false;
 
+      var last_pixel = false;
+      var last_sound = false;
+
       function updatePitch( time ) {
         var cycles = new Array;
         analyser.getFloatTimeDomainData( buf );
         var ac = autoCorrelate( buf, audioContext.sampleRate );
         // TODO: Paint confidence meter on canvasElem here.
 
+        var canvas = Paice.current_canvas;
+
         if (ac == -1) {
 
           Paice.log({ frequency: 'vague', cents: '-', volume: '-', note: '-' });
           is_painting = false;
-          Paice.current_canvas && Painter.draw(false, Paice.current_canvas);
+          last_sound = false;
+          last_pixel = false;
+          canvas && Painter.draw(false, canvas);
 
         } else {
 
@@ -289,40 +296,74 @@
 
           pitch = Math.round( pitch );
 
-          sound.frequency = is_painting && ( Math.abs(is_painting.frequency/pitch) < 0.8 || Math.abs(is_painting.frequency/pitch) > 1.2) ? is_painting.frequency : pitch;
+          sound.frequency = last_sound && ( Math.abs(last_sound.frequency/pitch) < 0.2 || Math.abs(last_sound.frequency/pitch) > 5) ? last_sound.frequency : pitch;
 
-          sound.volume = is_painting && ( Math.abs(is_painting.volume/meter.volume) < 0.8 || Math.abs(is_painting.volume/meter.volume) > 1.2) ? is_painting.volume : meter.volume;
+          sound.volume = last_sound && ( Math.abs(last_sound.volume/meter.volume) < 0.2 || Math.abs(last_sound.volume/meter.volume) > 5) ? last_sound.volume : meter.volume;
 
-          sound.cents = is_painting && ( Math.abs(is_painting.cents/detune) < 0.8 || Math.abs(is_painting.cents/detune) > 1.2) ? is_painting.cents : detune;
+          sound.cents = last_sound && ( Math.abs(last_sound.cents/detune) < 0.2 || Math.abs(last_sound.cents/detune) > 5) ? last_sound.cents : detune;
 
-          if(!is_painting) {
-
-            is_painting = sound;
-
-          }
+          canvas.set_max(sound);
 
           var color = Math.floor(((sound.frequency / Paice.constants.FREQUENCY.MAX) * Paice.constants.COLORS.MAX)).toString(16);
           var alpha = Math.abs(1-sound.volume.toFixed(2));
           var width = Math.floor((sound.volume / Paice.constants.VOLUME.MAX) * Paice.constants.SIZE.MAX);
           var height = Math.floor((sound.frequency / Paice.constants.FREQUENCY.MAX) * Paice.constants.SIZE.MAX);
 
+
+          var vector = false;
+
           var pixel_data = {
 
-            x: Paice.current_canvas.width/2 + Math.floor((sound.cents / Paice.constants.CENTS.MAX)*(Paice.current_canvas.width/2)),
-            y: Math.floor((sound.volume / Paice.constants.VOLUME.MAX)*Paice.current_canvas.height),
             fill: color,
             size: [width,height]
 
           };
 
-          var pixel = new Pixel(pixel_data.x, pixel_data.y, pixel_data.fill, pixel_data.size);
+          if(last_pixel) {
+            //vector = {
+            //
+            //  x: Math.floor((last_sound.frequency/sound.frequency)*(last_sound.frequency-sound.frequency < 0 ? -Paice.constants.STEP.MAX : Paice.constants.STEP.MAX)),
+            //  y: Math.floor((last_sound.volume/sound.volume)*(last_sound.volume-sound.volume < 0 ? -Paice.constants.STEP.MAX : Paice.constants.STEP.MAX))
+            //
+            //};
 
-          Paice.current_canvas && Painter.draw(pixel, Paice.current_canvas);
+            vector = {
+
+              x: Math.floor((last_sound.frequency/sound.frequency+(sound.cents/Paice.constants.CENTS.MAX))*sound.cents),
+              y: Math.floor((last_sound.volume/sound.volume-(sound.cents/Paice.constants.CENTS.MAX))*sound.cents)
+
+            };
+
+            pixel_data.x = last_pixel.x + vector.x;
+            pixel_data.y = last_pixel.y + vector.y;
+
+          }
+
+          else {
+
+            vector = {
+
+              x: Math.floor((canvas.width/2) + ((sound.cents/Paice.constants.CENTS.MAX)*(canvas.width/2))),
+              y: sound.volume > 0.1 ?  Math.floor((sound.volume/Paice.constants.VOLUME.MAX)*canvas.height) : Math.floor((sound.volume*0.1)*canvas.height)
+
+            };
+
+            pixel_data.x = vector.x;
+            pixel_data.y = vector.y;
+
+          }
+
+          var pixel = new Pixel(pixel_data.x, pixel_data.y, pixel_data.fill, pixel_data.size);
+          last_pixel = pixel;
+          last_sound = sound;
+          is_painting = true;
+
+          canvas && Painter.draw(pixel, canvas);
 
           //Paice.current_canvas && pixel.render(Paice.current_canvas);
 
           Paice.log({ frequency: pitch, cents: ( detune == 0 ? '--' : detune ), volume: meter.volume, note: noteStrings[note%12], width: width, height: height });
-
+          console.log(vector.x, vector.y);
         }
 
         if (!window.requestAnimationFrame)
@@ -337,7 +378,7 @@
         processor.lastClip = 0;
         processor.volume = 0;
         processor.clipLevel = clipLevel || 0.98;
-        processor.averaging = averaging || 0.95;
+        processor.averaging = averaging || 0.90;
         processor.clipLag = clipLag || 750;
 
         // this will have no effect, since we don't copy the input to the output,

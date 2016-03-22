@@ -36,13 +36,16 @@
       else if ( pixel && self.drawing ) {
         console.log('move');
 
+        // Текущее положение мыши - начальные координаты
+        self.ctx.lineTo(pixel.x, pixel.y);
+
+        self.ctx.stroke();
+        self.ctx.closePath();
         self.ctx.lineWidth = pixel.size[0];
         self.ctx.strokeStyle = '#' + pixel.fill;
         self.ctx.fillStyle = '#' + pixel.fill;
+        self.ctx.beginPath();
 
-        // Текущее положение мыши - начальные координаты
-        self.ctx.lineTo(pixel.x, pixel.y);
-        self.ctx.stroke();
         self.ctx.moveTo(pixel.x, pixel.y); // Курсор на начальную позицию
 
       }
