@@ -278,13 +278,17 @@
 
         var canvas = Paice.current_canvas;
 
-        if (ac == -1) {
-
+        function cancel_draw(){
           Paice.log({ frequency: 'vague', cents: '-', volume: '-', note: '-' });
           is_painting = false;
           last_sound = false;
           last_pixel = false;
           canvas && Painter.draw(false, canvas);
+        }
+
+        if (ac == -1) {
+
+          cancel_draw();
 
         } else {
 
@@ -304,10 +308,17 @@
 
           canvas.set_max(sound);
 
-          var color = Math.floor(((sound.frequency / Paice.constants.FREQUENCY.MAX) * Paice.constants.COLORS.MAX)).toString(16);
+          Paice.log({
+            min_frequency: canvas.min_frequency,
+            max_frequency: canvas.max_frequency,
+            min_volume: canvas.min_volume,
+            max_volume: canvas.max_volume
+          });
+
+          var color = Math.floor(((sound.frequency / canvas.max_frequency) * Paice.constants.COLORS.MAX)).toString(16);
           var alpha = Math.abs(1-sound.volume.toFixed(2));
-          var width = Math.floor((sound.volume / Paice.constants.VOLUME.MAX) * Paice.constants.SIZE.MAX);
-          var height = Math.floor((sound.frequency / Paice.constants.FREQUENCY.MAX) * Paice.constants.SIZE.MAX);
+          var width = Math.floor((sound.volume / canvas.max_volume) * Paice.constants.SIZE.MAX);
+          var height = Math.floor((sound.frequency / canvas.max_frequency) * Paice.constants.SIZE.MAX);
 
 
           var vector = false;
@@ -344,7 +355,7 @@
             vector = {
 
               x: Math.floor((canvas.width/2) + ((sound.cents/Paice.constants.CENTS.MAX)*(canvas.width/2))),
-              y: sound.volume > 0.1 ?  Math.floor((sound.volume/Paice.constants.VOLUME.MAX)*canvas.height) : Math.floor((sound.volume*0.1)*canvas.height)
+              y: Math.floor((sound.volume/canvas.max_volume)*canvas.height)
 
             };
 
@@ -353,17 +364,26 @@
 
           }
 
-          var pixel = new Pixel(pixel_data.x, pixel_data.y, pixel_data.fill, pixel_data.size);
-          last_pixel = pixel;
-          last_sound = sound;
-          is_painting = true;
+          if(pixel_data.x < -400 || pixel_data.x > (canvas.width + 400) || pixel_data.y < -400 || pixel_data.y > (canvas.height + 400)) {
 
-          canvas && Painter.draw(pixel, canvas);
+            cancel_draw();
 
-          //Paice.current_canvas && pixel.render(Paice.current_canvas);
+          }
+          else {
+            var pixel = new Pixel(pixel_data.x, pixel_data.y, pixel_data.fill, pixel_data.size);
+            last_pixel = pixel;
+            last_sound = sound;
+            is_painting = true;
 
-          Paice.log({ frequency: pitch, cents: ( detune == 0 ? '--' : detune ), volume: meter.volume, note: noteStrings[note%12], width: width, height: height });
-          console.log(vector.x, vector.y);
+            canvas && Painter.draw(pixel, canvas);
+
+            //Paice.current_canvas && pixel.render(Paice.current_canvas);
+
+            Paice.log({ frequency: pitch, cents: ( detune == 0 ? '--' : detune ), volume: meter.volume, note: noteStrings[note%12], width: width, height: height });
+            console.log(vector.x, vector.y);
+          }
+
+
         }
 
         if (!window.requestAnimationFrame)

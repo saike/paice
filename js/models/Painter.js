@@ -41,9 +41,9 @@
 
         self.ctx.stroke();
         self.ctx.closePath();
-        self.ctx.lineWidth = pixel.size[0];
-        self.ctx.strokeStyle = '#' + pixel.fill;
-        self.ctx.fillStyle = '#' + pixel.fill;
+        //self.ctx.lineWidth = pixel.size[0];
+        //self.ctx.strokeStyle = '#' + pixel.fill;
+        //self.ctx.fillStyle = '#' + pixel.fill;
         self.ctx.beginPath();
 
         self.ctx.moveTo(pixel.x, pixel.y); // Курсор на начальную позицию

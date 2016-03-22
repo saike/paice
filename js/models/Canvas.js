@@ -28,32 +28,44 @@
 
     self.max_volume = 0;
 
+    var counts = 30;
+
+    var count = 0;
+
+    var summer = {
+
+      volume: [],
+      frequency: []
+
+    };
+
     self.set_max = function(sound){
 
-
-      if(self.min_frequency === 0 || sound.frequency < self.min_frequency){
-
-        self.min_frequency = sound.frequency;
+      if(summer.volume.length < counts) {
+        summer.frequency.push(sound.frequency);
+        summer.volume.push(sound.volume);
+      }
+      else {
+        summer.frequency.splice(0,1);
+        summer.frequency.push(sound.frequency);
+        summer.volume.splice(0,1);
+        summer.volume.push(sound.volume);
 
       }
 
-      if(self.min_volume === 0 || sound.volume < self.min_volume){
-
-        self.min_volume = sound.volume;
-
+      function get_array_max(numArray) {
+        return Math.max.apply(null, numArray);
       }
 
-      if(self.max_frequency === 0 || sound.frequency > self.max_frequency){
-
-        self.max_frequency = sound.frequency;
-
+      function get_array_min(numArray) {
+        return Math.min.apply(null, numArray);
       }
 
-      if(self.max_volume === 0 || sound.volume > self.max_volume){
+      self.max_frequency = get_array_max(summer.frequency);
+      self.min_frequency = get_array_min(summer.frequency);
 
-        self.max_volume = sound.volume;
-
-      }
+      self.max_volume = get_array_max(summer.volume);
+      self.min_volume = get_array_min(summer.volume);
 
     };
 

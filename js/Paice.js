@@ -88,7 +88,7 @@
 
       for(var l in current_log){
 
-        log+=l + ': ' + current_log[l] + ' ';
+        log+=l + ': ' + current_log[l] + '</br> ';
 
       }
 
