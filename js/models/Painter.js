@@ -41,7 +41,7 @@
 
         self.ctx.stroke();
         self.ctx.closePath();
-        //self.ctx.lineWidth = pixel.size[0];
+        self.ctx.lineWidth = pixel.size[0];
         //self.ctx.strokeStyle = '#' + pixel.fill;
         //self.ctx.fillStyle = '#' + pixel.fill;
         self.ctx.beginPath();

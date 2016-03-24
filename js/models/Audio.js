@@ -24,18 +24,14 @@
         noteElem,
         detuneElem,
         detuneAmount,
-        MAX_SIZE,
-        logger;
+        MAX_SIZE;
 
-      self.run = false;
+      self.state = 0;
 
       audio.prototype.start = function() {
         audioContext = new AudioContext();
 
         var screen = Paice.screen();
-
-        logger = document.createElement('h2');
-        screen.insertBefore(logger, screen.firstChild);
 
         screen.ondragenter = function (e) {
           //this.classList.add("droptarget");
@@ -108,7 +104,7 @@
         updatePitch();
       }
 
-      audio.prototype.listen = function() {
+      audio.prototype.listen = function(elm) {
         if (isPlaying) {
           //stop playing and return
           sourceNode.stop( 0 );
@@ -120,7 +116,7 @@
           window.cancelAnimationFrame( rafID );
         }
         isLiveInput = true;
-        self.run = true;
+        self.state = 1;
         getUserMedia(
           {
             "audio": {
@@ -135,20 +131,12 @@
           }, gotStream);
       };
 
-      audio.prototype.play = function togglePlayback() {
+      audio.prototype.play = function(callback) {
         if (isPlaying) {
-          //stop playing and return
-          sourceNode.stop( 0 );
-          sourceNode = null;
-          analyser = null;
-          isPlaying = false;
-          if (!window.cancelAnimationFrame)
-            window.cancelAnimationFrame = window.webkitCancelAnimationFrame;
-          window.cancelAnimationFrame( rafID );
-          return "start";
+          self.stop();
         }
 
-        self.run = true;
+        self.state = 2;
 
         sourceNode = audioContext.createBufferSource();
         sourceNode.buffer = theBuffer;
@@ -169,21 +157,41 @@
 
       };
 
+      audio.prototype.stop = function(){
+        //stop playing and return
+        self.state = 0;
+        if(!sourceNode) return;
+        sourceNode.stop( 0 );
+        sourceNode = null;
+        analyser = null;
+        isPlaying = false;
+        if (!window.cancelAnimationFrame)
+          window.cancelAnimationFrame = window.webkitCancelAnimationFrame;
+        window.cancelAnimationFrame( rafID );
+        return "start";
+      };
+
       audio.prototype.deaf = function(){
 
-        self.run = false;
+        self.state = 0;
         if (!window.cancelAnimationFrame)
           window.cancelAnimationFrame = window.webkitCancelAnimationFrame;
         window.cancelAnimationFrame( rafID );
 
       };
 
-      audio.prototype.toggle = function(){
+      audio.prototype.toggle = function(callback){
 
         //Generator.sounds.run ? Generator.sounds.stop() : Generator.sounds.start();
 
-        if(self.run) self.deaf();
-        else self.listen();
+        if(self.state > 0) {
+          self.deaf();
+          callback && callback(0);
+        }
+        else {
+          self.listen();
+          callback && callback(1);
+        }
 
 
       };
@@ -316,7 +324,6 @@
           });
 
           var color = Math.floor(((sound.frequency / canvas.max_frequency) * Paice.constants.COLORS.MAX)).toString(16);
-          var alpha = Math.abs(1-sound.volume.toFixed(2));
           var width = Math.floor((sound.volume / canvas.max_volume) * Paice.constants.SIZE.MAX);
           var height = Math.floor((sound.frequency / canvas.max_frequency) * Paice.constants.SIZE.MAX);
 
@@ -340,10 +347,12 @@
 
             vector = {
 
-              x: Math.floor((last_sound.frequency/sound.frequency+(sound.cents/Paice.constants.CENTS.MAX))*sound.cents),
-              y: Math.floor((last_sound.volume/sound.volume-(sound.cents/Paice.constants.CENTS.MAX))*sound.cents)
+              x: Math.floor(((last_sound.frequency/sound.frequency)-Math.abs((sound.cents/Paice.constants.CENTS.MAX)))*sound.cents*0.4),
+              y: Math.floor(((last_sound.volume/sound.volume)-(sound.frequency/canvas.max_frequency))*sound.cents*0.4)
 
             };
+
+            Paice.log({ vector_x: vector.x, vector_y: vector.y });
 
             pixel_data.x = last_pixel.x + vector.x;
             pixel_data.y = last_pixel.y + vector.y;
@@ -355,7 +364,7 @@
             vector = {
 
               x: Math.floor((canvas.width/2) + ((sound.cents/Paice.constants.CENTS.MAX)*(canvas.width/2))),
-              y: Math.floor((sound.volume/canvas.max_volume)*canvas.height)
+              y: Math.abs(Math.floor(((sound.volume/canvas.max_volume)+(sound.cents/Paice.constants.CENTS.MAX)-(sound.frequency/canvas.max_frequency))*canvas.height))
 
             };
 

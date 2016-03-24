@@ -1,6 +1,110 @@
 #logger {
-    position: absolute;
-    left: 0;
-    top: 0;
-    text-align: left;
+	position: absolute;
+	left: 0;
+	top: 0;
+	text-align: left;
+	display: none;
+}
+
+.tools {
+	position: absolute;
+	top: 0;
+	padding: 1em;
+	left: 0;
+	right: 0;
+}
+
+.tools .btn {
+	margin: 0.4em;
+}
+
+body, html {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	position: relative;
+}
+
+.btn {
+
+	padding: 1em;
+	text-align: center;
+	display: inline-block;
+	opacity: 0.8;
+	border-radius: 0.4em;
+	cursor: pointer;
+	outline: none;
+
+}
+
+.btn:hover {
+
+	opacity: 1;
+
+}
+
+.btn.btn-round {
+
+	padding: 0;
+	display: inline-block;
+	width: 5em;
+	height: 5em;
+	border-radius: 2.5em;
+	line-height: 5em;
+
+}
+
+.btn.mic {
+
+	background-image: url('../img/icons/mic.svg');
+	background-size: 2em 3em;
+	background-repeat: no-repeat;
+	background-position: center;
+
+}
+
+.btn.mic.active {
+
+	background-image: url('../img/icons/mic-active.svg');
+
+}
+
+.btn.play {
+
+	background-image: url('../img/icons/play_pause.svg');
+	background-size: 3em 5em;
+	background-repeat: no-repeat;
+	background-position: center;
+
+}
+
+.btn.play.active {
+
+	background-image: url('../img/icons/play_pause-active.svg');
+
+}
+
+.btn.clear {
+
+	background-image: url('../img/icons/erase-512.png');
+	background-size: 5em 5em;
+	background-repeat: no-repeat;
+	background-position: center;
+
+}
+
+.clearfix:after {
+	content:"";
+	display:table;
+	clear:both;
+}
+
+.pull_left {
+	float: left;
+}
+
+.pull_right {
+	float: right;
 }

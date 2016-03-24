@@ -74,6 +74,8 @@
 
       Audio.start();
 
+      riot.mount('paice');
+
     };
 
     var current_log = {};

@@ -4,19 +4,28 @@
 
     var self = this;
 
-    self.width = w || Paice.constants.CANVAS[0].WIDTH;
+    self.width = window.innerWidth || w || Paice.constants.CANVAS[0].WIDTH;
 
-    self.height = h || Paice.constants.CANVAS[0].HEIGHT;
+    self.height = window.innerHeight || h || Paice.constants.CANVAS[0].HEIGHT;
+
+    window.addEventListener('resize', function(){
+
+      self.width = window.innerWidth;
+      self.height = window.innerHeight;
+      self.dom.width = self.width;
+      self.dom.height =self.height;
+
+    });
 
     var dom = document.createElement('canvas');
-    dom.width = w || 1280;
-    dom.height = h || 720;
+    dom.width = self.width;
+    dom.height =self.height;
 
     self.dom = dom;
 
     self.clear = function(){
 
-
+      self.dom.getContext('2d').clearRect(0, 0, self.width, self.height);
 
     };
 
@@ -29,8 +38,6 @@
     self.max_volume = 0;
 
     var counts = 30;
-
-    var count = 0;
 
     var summer = {
 
