@@ -23,7 +23,7 @@
       ctx.fillStyle = "rgba("+self.fill[0]+","+self.fill[1]+","+self.fill[2]+","+self.fill[3]+")";
       ctx.fillRect( self.x, self.y, self.size[0], self.size[1] );
 
-      Paice.log({ x: self.x, y: self.y, fill: self.fill });
+      Logger.log({ x: self.x, y: self.y, fill: self.fill });
 
       console.log(self.x + ' ' + self.y + ' ' + self.fill);
 

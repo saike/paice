@@ -46,7 +46,7 @@
         },
 
         STEP: {
-          MAX: 10,
+          MAX: 40,
           MIN: 0
         },
 
@@ -75,26 +75,6 @@
       Audio.start();
 
       riot.mount('paice');
-
-    };
-
-    var current_log = {};
-
-    paice.prototype.log = function(obj){
-
-      for(var p in obj){
-        current_log[p] = obj[p];
-      }
-
-      var log = '';
-
-      for(var l in current_log){
-
-        log+=l + ': ' + current_log[l] + '</br> ';
-
-      }
-
-      this.logger.innerHTML = log;
 
     };
 

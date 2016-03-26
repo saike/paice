@@ -32,6 +32,8 @@
 
       var arr = self.sequences.line;
 
+      if(!pixel) return;
+
       if(arr.length < 1) return pixel.fill;
 
       var sum = 0;
@@ -47,6 +49,8 @@
 
       var self = this;
 
+      var color;
+
       if(!self.drawing && pixel) {
 
         self.sequences.line = [];
@@ -57,7 +61,7 @@
 
         self.ctx = canvas.dom.getContext("2d");
 
-        var color = self.make_color(pixel);
+        color = self.make_color(pixel);
 
         self.ctx.strokeStyle = '#' + color;
         self.ctx.fillStyle = '#' + color;
@@ -80,9 +84,10 @@
         self.ctx.stroke();
         //self.ctx.closePath();
         self.sequences.line.push(pixel);
+        color = self.make_color(pixel);
+        self.ctx.strokeStyle = '#' + color;
+        self.ctx.fillStyle = '#' + color;
         self.ctx.lineWidth = pixel.size[0];
-        self.ctx.strokeStyle = '#' + pixel.fill;
-        self.ctx.fillStyle = '#' + pixel.fill;
         //self.ctx.beginPath();
 
         self.ctx.moveTo(pixel.x, pixel.y); // Курсор на начальную позицию
@@ -91,6 +96,9 @@
 
       else if(!pixel && self.drawing) {
         console.log('finish');
+        color = self.make_color();
+        self.ctx.strokeStyle = '#' + color;
+        self.ctx.fillStyle = '#' + color;
 
         self.ctx.lineTo(pixel.x, pixel.y);
         self.ctx.stroke();
@@ -101,7 +109,7 @@
 
       }
 
-      pixel && Paice.log({ x: pixel.x, y: pixel.y, fill: pixel.fill, sequence: self.sequences.line.map(function(pixel){ return pixel.fill; }) });
+      pixel && Logger.log({ x: pixel.x, y: pixel.y, fill: pixel.fill });
 
     };
 

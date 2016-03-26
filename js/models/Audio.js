@@ -287,7 +287,7 @@
         var canvas = Paice.current_canvas;
 
         function cancel_draw(){
-          Paice.log({ frequency: 'vague', cents: '-', volume: '-', note: '-' });
+          Logger.log({ frequency: 'vague', cents: '-', volume: '-', note: '-' });
           is_painting = false;
           last_sound = false;
           last_pixel = false;
@@ -316,7 +316,7 @@
 
           canvas.set_max(sound);
 
-          Paice.log({
+          Logger.log({
             min_frequency: canvas.min_frequency,
             max_frequency: canvas.max_frequency,
             min_volume: canvas.min_volume,
@@ -345,14 +345,17 @@
             //
             //};
 
+            var last_volume = last_sound.volume <= 0.1 ? last_sound.volume*10 : last_sound.volume;
+            var sound_volume = sound.volume < 0.1 ? sound.volume*10 : sound.volume;
+
             vector = {
 
-              x: Math.floor(((last_sound.frequency/sound.frequency)-Math.abs((sound.cents/Paice.constants.CENTS.MAX)))*sound.cents*0.4),
-              y: Math.floor(((last_sound.volume/sound.volume)-(sound.frequency/canvas.max_frequency)+Math.abs((sound.cents/Paice.constants.CENTS.MAX)))*sound.cents*0.4)
+              x: Math.floor(((sound.frequency-last_sound.frequency)*4/canvas.max_frequency)*Paice.constants.STEP.MAX),
+              y: Math.floor(((sound_volume-last_volume)/canvas.max_volume)*Paice.constants.STEP.MAX)
 
             };
 
-            Paice.log({ vector_x: vector.x, vector_y: vector.y });
+            Logger.log({ vector_x: vector.x, vector_y: vector.y });
 
             pixel_data.x = last_pixel.x + vector.x;
             pixel_data.y = last_pixel.y + vector.y;
@@ -363,7 +366,7 @@
 
             vector = {
 
-              x: Math.floor((canvas.width/2) + ((sound.cents/Paice.constants.CENTS.MAX)*(canvas.width/2))),
+              x: Math.floor((sound.frequency/canvas.max_frequency)*canvas.width),
               y: Math.abs(Math.floor(((sound.volume/canvas.max_volume)+(sound.cents/Paice.constants.CENTS.MAX)-(sound.frequency/canvas.max_frequency))*canvas.height))
 
             };
@@ -388,7 +391,7 @@
 
             //Paice.current_canvas && pixel.render(Paice.current_canvas);
 
-            Paice.log({ frequency: pitch, cents: ( detune == 0 ? '--' : detune ), volume: meter.volume, note: noteStrings[note%12], width: width, height: height });
+            Logger.log({ frequency: pitch, cents: ( detune == 0 ? '--' : detune ), volume: meter.volume, note: noteStrings[note%12], width: width, height: height });
             console.log(vector.x, vector.y);
           }
 

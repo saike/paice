@@ -37,7 +37,7 @@
 
     self.max_volume = 0;
 
-    var counts = 30;
+    var counts = 60;
 
     var summer = {
 
