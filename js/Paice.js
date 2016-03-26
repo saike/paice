@@ -22,8 +22,8 @@
 
         CENTS: {
 
-          MIN: 0,
-          MAX: 50
+          MIN: -40,
+          MAX: 40
 
         },
 
