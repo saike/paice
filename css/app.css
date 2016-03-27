@@ -87,6 +87,15 @@ body {
 
 }
 
+.btn.save {
+
+	background-image: url('../img/icons/save.png');
+	background-size: 2.5em 2.5em;
+	background-repeat: no-repeat;
+	background-position: center;
+
+}
+
 .clearfix:after {
 	content:"";
 	display:table;

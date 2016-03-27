@@ -7,6 +7,9 @@
       <!--<button class="btn btn-round play { active: playing() } pull_left" onclick="{ play }"></button>-->
 
       <button class="btn btn-round clear pull_right" onclick="{ clear }"></button>
+      <a name="save">
+        <button class="btn btn-round save pull_right"></button>
+      </a>
     </div>
   </div>
 
@@ -73,6 +76,15 @@
       Paice.current_canvas && Paice.current_canvas.clear();
 
     };
+
+    self.save.addEventListener('click', function(e){
+
+      console.dir(e);
+      var image = Paice.current_canvas && Paice.current_canvas.get_image();
+      e.target.parentNode.href = image;
+      e.target.parentNode.download = 'Paice_Drawing_' + new Date().toISOString() + '.png';
+
+    }, false);
 
   </script>
 

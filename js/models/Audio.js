@@ -350,7 +350,7 @@
 
             vector = {
 
-              x: Math.floor(((sound.frequency-last_sound.frequency)*4/canvas.max_frequency)*Paice.constants.STEP.MAX),
+              x: Math.floor(((sound.frequency-last_sound.frequency)*8/canvas.max_frequency)*Paice.constants.STEP.MAX),
               y: Math.floor(((sound_volume-last_volume)/canvas.max_volume)*Paice.constants.STEP.MAX)
 
             };
@@ -366,7 +366,7 @@
 
             vector = {
 
-              x: Math.floor((sound.frequency/canvas.max_frequency)*canvas.width),
+              x: Math.floor((((sound.frequency/canvas.max_frequency)+(sound.cents/Paice.constants.CENTS.MAX))/2)*canvas.width),
               y: Math.abs(Math.floor(((sound.volume/canvas.max_volume)+(sound.cents/Paice.constants.CENTS.MAX)-(sound.frequency/canvas.max_frequency))*canvas.height))
 
             };

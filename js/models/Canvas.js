@@ -37,7 +37,7 @@
 
     self.max_volume = 0;
 
-    var counts = 60;
+    var counts = 30;
 
     var summer = {
 
@@ -73,6 +73,12 @@
 
       self.max_volume = get_array_max(summer.volume);
       self.min_volume = get_array_min(summer.volume);
+
+    };
+
+    self.get_image = function(){
+
+      return self.dom.toDataURL("image/png");
 
     };
 
