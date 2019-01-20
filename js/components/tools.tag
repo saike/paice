@@ -25,6 +25,8 @@
     </div>
 
     <div class="background-hint" if={ !listening() && !playing() }>
+        Paint with your microphone, or
+        <br>
         Drag & Drop audio file here,
         <br>
             then click "Play" button to draw.
