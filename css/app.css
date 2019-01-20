@@ -4,6 +4,7 @@
 	padding: 1em;
 	left: 0;
 	right: 0;
+  font-family: Arial, sans-serif;
 }
 
 .tools .btn {
@@ -28,6 +29,7 @@ body {
 	border-radius: 0.4em;
 	cursor: pointer;
 	outline: none;
+  position: relative;
 
 }
 
@@ -108,4 +110,93 @@ body {
 
 .pull_right {
 	float: right;
+}
+
+.btn-hint {
+
+  position: absolute;
+  top: 105%;
+  font-size: 1.5em;
+  line-height: 100%;
+  min-width: 10em;
+  text-align: left;
+  text-shadow: 1px 1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, -1px -1px 0 #fff, 1px 0px 0 #fff, 0px 1px 0 #fff, -1px 0px 0 #fff, 0px -1px 0 #fff;
+
+}
+
+.btn-hint.type-bottom {
+
+  margin-top: 3em;
+
+}
+
+.btn-hint.type-bottom:before {
+
+  position: absolute;
+  font-size: 3em;
+  content: '\2191';
+  line-height: 100%;
+  bottom: 100%;
+  left: 0.1em;
+
+}
+
+.btn-hint.type-right {
+
+  margin-top: 0.1em;
+  top: 0;
+  left: 100%;
+  margin-left: 0.5em;
+  min-width: 10em;
+  padding-left: 3.5em;
+
+}
+
+.btn-hint.type-right:before {
+
+  position: absolute;
+  font-size: 3em;
+  content: '←';
+  line-height: 100%;
+  left: 0.1em;
+  top: 0;
+
+}
+
+.btn-hint.type-left {
+
+  margin-top: 0.1em;
+  top: 0;
+  right: 100%;
+  margin-left: 0.5em;
+  min-width: 10em;
+  padding-right: 3em;
+
+}
+
+.btn-hint.type-left:before {
+
+  position: absolute;
+  font-size: 3em;
+  content: '→';
+  line-height: 100%;
+  right: 0.3em;
+  top: 0;
+
+}
+
+.background-hint {
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+
+  font-size: 1.4em;
+  line-height: 120%;
+  min-width: 10em;
+  text-align: left;
+  text-shadow: 1px 1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, -1px -1px 0 #fff, 1px 0px 0 #fff, 0px 1px 0 #fff, -1px 0px 0 #fff, 0px -1px 0 #fff;
+
 }

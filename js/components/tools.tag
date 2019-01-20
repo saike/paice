@@ -2,14 +2,34 @@
 
   <div class="tools">
     <div class="clearfix">
-      <button class="btn btn-round mic { active: listening() } pull_left" onclick="{ listen }"></button>
-      <button class="btn btn-round play { active: playing() } pull_left" onclick="{ play }"></button>
+      <button class="btn btn-round mic { active: listening() } pull_left" onclick="{ listen }">
+        <div class="btn-hint type-bottom" if={ !listening() && !playing() }>
+            Click this button to paint with your microphone
+        </div>
+      </button>
+      <button class="btn btn-round play { active: playing() } pull_left" onclick="{ play }">
+        <div class="btn-hint type-right" if={ !listening() && !playing() }>
+          Click this button to paint with audio file (wav, mp3)
+        </div>
+      </button>
       <!--<button class="btn btn-round play { active: playing() } pull_left" onclick="{ play }"></button>-->
 
       <button class="btn btn-round clear pull_right" onclick="{ clear }"></button>
       <a name="save">
-        <button class="btn btn-round save pull_right"></button>
+        <button class="btn btn-round save pull_right">
+          <div class="btn-hint type-left" if={ !listening() && !playing() }>
+            Click this button to export drawing as PNG image
+          </div>
+        </button>
       </a>
+    </div>
+
+    <div class="background-hint" if={ !listening() && !playing() }>
+        Drag & Drop audio file here,
+        <br>
+            then click "Play" button to draw.
+        <br>
+        Supported formats: WAV, MP3
     </div>
   </div>
 

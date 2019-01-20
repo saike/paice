@@ -20,7 +20,6 @@
       self.state = 0;
 
       audio.prototype.start = function() {
-        audioContext = new AudioContext();
 
         var screen = Paice.screen();
 
@@ -39,6 +38,9 @@
           e.preventDefault();
         };
         screen.ondrop = function (e) {
+
+          audioContext = new AudioContext();
+
           console.dir(e);
           //this.classList.remove("droptarget");
           e.preventDefault();
@@ -96,6 +98,7 @@
       }
 
       audio.prototype.listen = function(elm) {
+        audioContext = new AudioContext();
         if (isPlaying) {
           //stop playing and return
           sourceNode.stop( 0 );
