@@ -8,6 +8,8 @@
 
       this.ctx = false;
 
+      this.color_deep = 10;
+
       this.sequences = {
         line: []
       };
@@ -72,7 +74,7 @@
 
       }
 
-      return self.rgb_to_hex(sum.r/arr.length, sum.g/arr.length, sum.b/arr.length);
+      return self.rgb_to_hex(Math.round(sum.r/arr.length), Math.round(sum.g/arr.length), Math.round(sum.b/arr.length));
 
     };
 
@@ -107,13 +109,16 @@
       }
 
       else if ( pixel && self.drawing ) {
-        console.log('move');
+        //console.log('move');
 
         // Текущее положение мыши - начальные координаты
         self.ctx.lineTo(pixel.x, pixel.y);
 
         self.ctx.stroke();
         self.ctx.closePath();
+        if(self.color_deep && self.sequences.line.length > self.color_deep){
+          self.sequences.line.shift();
+        }
         self.sequences.line.push(pixel);
         color = self.make_color(pixel);
         self.ctx.strokeStyle = '#' + color;
@@ -126,7 +131,7 @@
       }
 
       else if(!pixel && self.drawing) {
-        console.log('finish');
+        //console.log('finish');
         color = self.make_color();
         self.ctx.strokeStyle = '#' + color;
         self.ctx.fillStyle = '#' + color;
@@ -139,7 +144,7 @@
         self.sequences.line = [];
 
       }
-      console.log(color);
+      //console.log(color);
 
       pixel && Logger.log({ x: pixel.x, y: pixel.y, fill: pixel.fill });
 

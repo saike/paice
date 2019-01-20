@@ -9,8 +9,8 @@
       this.constants = {
 
         FREQUENCY: {
-          MIN: 120,
-          MAX: 7000
+          MIN: 50,
+          MAX: 12000
         },
 
         VOLUME: {

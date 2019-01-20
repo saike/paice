@@ -21,21 +21,19 @@
 
     var self = this;
 
-    self.current = {};
-
     self.show = false;
 
-    self.log = function(obj){
+    self.log = function(data){
 
-      for(var p in obj){
-        self.current[p] = obj[p];
+      if(!self.show) {
+        return;
       }
 
       var log = '';
 
-      for(var l in self.current){
+      for(var l in data){
 
-        log+=l + ': ' + self.current[l] + '</br> ';
+        log+=l + ': ' + data[l] + '</br> ';
 
       }
 

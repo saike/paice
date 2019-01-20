@@ -14,17 +14,8 @@
       var sourceNode = null;
       var analyser = null;
       var theBuffer = null;
-      var DEBUGCANVAS = null;
       var mediaStreamSource = null;
       var meter = null;
-      var detectorElem,
-        canvasElem,
-        waveCanvas,
-        pitchElem,
-        noteElem,
-        detuneElem,
-        detuneAmount,
-        MAX_SIZE;
 
       self.state = 0;
 
@@ -88,9 +79,9 @@
       }
 
       function gotStream(stream) {
+        console.dir(stream);
         // Create an AudioNode from the stream.
         mediaStreamSource = audioContext.createMediaStreamSource(stream);
-
         // Connect it to the destination.
         analyser = audioContext.createAnalyser();
         analyser.fftSize = 2048;
@@ -281,6 +272,7 @@
       function updatePitch( time ) {
         var cycles = new Array;
         analyser.getFloatTimeDomainData( buf );
+
         var ac = autoCorrelate( buf, audioContext.sampleRate );
         // TODO: Paint confidence meter on canvasElem here.
 
@@ -303,6 +295,8 @@
           var pitch = ac;
           var note =  noteFromPitch( pitch );
           var detune = centsOffFromPitch( pitch, note );
+          var volume = meter.volume < 0.1 ? meter.volume*10 : meter.volume;
+
 
           var sound = new Sound();
 
@@ -310,7 +304,7 @@
 
           sound.frequency = last_sound && ( Math.abs(last_sound.frequency/pitch) < 0.2 || Math.abs(last_sound.frequency/pitch) > 5) ? last_sound.frequency : pitch;
 
-          sound.volume = last_sound && ( Math.abs(last_sound.volume/meter.volume) < 0.2 || Math.abs(last_sound.volume/meter.volume) > 5) ? last_sound.volume : meter.volume;
+          sound.volume = last_sound && ( Math.abs(last_sound.volume/volume) < 0.2 || Math.abs(last_sound.volume/volume) > 5) ? last_sound.volume : volume;
 
           sound.cents = last_sound && ( Math.abs(last_sound.cents/detune) < 0.2 || Math.abs(last_sound.cents/detune) > 5) ? last_sound.cents : detune;
 
@@ -323,7 +317,7 @@
             max_volume: canvas.max_volume
           });
 
-          var color = Math.floor(((sound.frequency / canvas.max_frequency) * Paice.constants.COLORS.MAX)).toString(16);
+          var color = Math.floor((sound.frequency / canvas.max_frequency) * Paice.constants.COLORS.MAX).toString(16);
           var width = Math.floor((sound.volume / canvas.max_volume) * Paice.constants.SIZE.MAX);
           var height = Math.floor((sound.frequency / canvas.max_frequency) * Paice.constants.SIZE.MAX);
 
@@ -345,13 +339,10 @@
             //
             //};
 
-            var last_volume = last_sound.volume <= 0.1 ? last_sound.volume*10 : last_sound.volume;
-            var sound_volume = sound.volume < 0.1 ? sound.volume*10 : sound.volume;
-
             vector = {
 
               x: Math.floor(((sound.frequency-last_sound.frequency)*8/canvas.max_frequency)*Paice.constants.STEP.MAX),
-              y: Math.floor(((sound_volume-last_volume)/canvas.max_volume)*Paice.constants.STEP.MAX)
+              y: Math.floor(((sound.volume-last_sound.volume)*8/canvas.max_volume)*Paice.constants.STEP.MAX)
 
             };
 
@@ -364,15 +355,25 @@
 
           else {
 
-            vector = {
+            var volume_impulse;
+            var frequency_impulse;
+            //
+            frequency_impulse = canvas.max_frequency-sound.frequency;
 
-              x: Math.floor((((sound.frequency/canvas.max_frequency)+(sound.cents/Paice.constants.CENTS.MAX))/2)*canvas.width),
-              y: Math.abs(Math.floor(((sound.volume/canvas.max_volume)+(sound.cents/Paice.constants.CENTS.MAX)-(sound.frequency/canvas.max_frequency))*canvas.height))
+            volume_impulse = canvas.max_volume/sound.volume;
 
-            };
+            //
+            //Logger.log({ frequency_impulse: frequency_impulse, volume_impulse: volume_impulse  });
+            //
+            //vector = {
+            //
+            //  x: Math.floor((canvas.width/2) + ((canvas.width/2) * frequency_impulse)),
+            //  y: Math.floor((canvas.height/2) + ((canvas.height/2) * volume_impulse))
+            //
+            //};
 
-            pixel_data.x = vector.x;
-            pixel_data.y = vector.y;
+            pixel_data.x = Math.floor((((canvas.average_frequency+(canvas.average_frequency - sound.frequency))/canvas.max_frequency))*canvas.width);
+            pixel_data.y = canvas.height - Math.floor((((canvas.average_volume+(canvas.average_volume-sound.volume))/canvas.max_volume))*canvas.height);
 
           }
 
@@ -391,8 +392,8 @@
 
             //Paice.current_canvas && pixel.render(Paice.current_canvas);
 
-            Logger.log({ frequency: pitch, cents: ( detune == 0 ? '--' : detune ), volume: meter.volume, note: noteStrings[note%12], width: width, height: height });
-            console.log(vector.x, vector.y);
+            Logger.log({ frequency: sound.frequency, cents: sound.cents , volume: sound.volume, note: noteStrings[note%12], width: width, height: height });
+            //console.log(vector.x, vector.y);
           }
 
 

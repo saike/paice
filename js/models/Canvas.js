@@ -29,15 +29,18 @@
 
     };
 
-    self.min_frequency = 0;
+    self.min_frequency = Paice.constants.FREQUENCY.MIN;
 
-    self.max_frequency = 0;
+    self.max_frequency = Paice.constants.FREQUENCY.MAX;
 
-    self.min_volume = 0;
+    self.min_volume = Paice.constants.VOLUME.MIN;
 
-    self.max_volume = 0;
+    self.max_volume = Paice.constants.VOLUME.MAX;
 
-    var counts = 30;
+    self.average_frequency = (Paice.constants.FREQUENCY.MIN + Paice.constants.FREQUENCY.MAX)/2;
+    self.average_volume = (Paice.constants.VOLUME.MIN + Paice.constants.VOLUME.MAX)/2;
+
+    var counts = 144;
 
     var summer = {
 
@@ -68,11 +71,24 @@
         return Math.min.apply(null, numArray);
       }
 
-      self.max_frequency = get_array_max(summer.frequency);
-      self.min_frequency = get_array_min(summer.frequency);
+      var new_max_frequency = get_array_max(summer.frequency);
+      var new_min_frequency = get_array_min(summer.frequency);
 
-      self.max_volume = get_array_max(summer.volume);
-      self.min_volume = get_array_min(summer.volume);
+      var new_max_volume = get_array_max(summer.volume);
+      var new_min_volume = get_array_min(summer.volume);
+
+      self.max_frequency = self.max_frequency < new_max_frequency ? Paice.constants.FREQUENCY.MAX : new_max_frequency;
+      self.min_frequency = self.min_frequency > new_min_frequency ? Paice.constants.FREQUENCY.MIN : new_min_frequency;
+      self.max_volume = self.max_volume < new_max_volume ? Paice.constants.VOLUME.MAX : new_max_volume;
+      self.min_volume = self.min_volume < new_min_volume ? Paice.constants.VOLUME.MAX : new_min_volume;
+
+      self.average_frequency = summer.frequency.reduce(function(a, b) { return a + b; })/summer.frequency.length;
+      self.average_volume =  summer.volume.reduce(function(a, b) { return a + b; })/summer.volume.length;
+
+      Logger.log({
+        avg_freq: self.average_frequency,
+        avg_vol: self.average_volume
+      });
 
     };
 
